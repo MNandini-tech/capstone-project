@@ -8,7 +8,7 @@ public class RouteSeat {
     // Route details
     static String[] source = new String[10];
     static String[] destination = new String[10];
-    static double[] distance = new double[10];
+    static int[] distance = new int[10];
     static int routeCount = 0;
 
     // Bus details
@@ -26,11 +26,16 @@ public class RouteSeat {
     static int[] bookedSeat = new int[100];
     static double[] fare = new double[100];
     static boolean[] active = new boolean[100];
-
     static int bookingCount = 0;
+
 
     // 1. Add Route
     static void addRoute() {
+
+        if (routeCount == 10) {
+            System.out.println("Route limit reached!");
+            return;
+        }
 
         System.out.print("Enter source: ");
         source[routeCount] = sc.nextLine();
@@ -38,8 +43,8 @@ public class RouteSeat {
         System.out.print("Enter destination: ");
         destination[routeCount] = sc.nextLine();
 
-        System.out.print("Enter distance: ");
-        distance[routeCount] = Double.parseDouble(sc.nextLine());
+        System.out.print("Enter distance in KM: ");
+        distance[routeCount] = Integer.parseInt(sc.nextLine());
 
         if (distance[routeCount] <= 0) {
             System.out.println("Invalid distance!");
@@ -51,11 +56,17 @@ public class RouteSeat {
         System.out.println("Route added successfully!");
     }
 
+
     // 2. Add Bus
     static void addBus() {
 
         if (routeCount == 0) {
-            System.out.println("Add a route first!");
+            System.out.println("Please add a route first!");
+            return;
+        }
+
+        if (busCount == 10) {
+            System.out.println("Bus limit reached!");
             return;
         }
 
@@ -88,35 +99,56 @@ public class RouteSeat {
         System.out.println("Bus added successfully!");
     }
 
+
     // 3. View Routes
     static void viewRoutes() {
 
         System.out.println("\n--- ROUTE LIST ---");
 
+        if (routeCount == 0) {
+            System.out.println("No routes available!");
+            return;
+        }
+
         for (int i = 0; i < routeCount; i++) {
             System.out.println("Route ID: " + (i + 1));
             System.out.println(source[i] + " to " + destination[i]);
             System.out.println("Distance: " + distance[i] + " KM");
+            System.out.println("----------------------");
         }
     }
+
 
     // 4. View Buses
     static void viewBuses() {
 
         System.out.println("\n--- BUS LIST ---");
 
+        if (busCount == 0) {
+            System.out.println("No buses available!");
+            return;
+        }
+
         for (int i = 0; i < busCount; i++) {
+
             int r = busRoute[i];
 
             System.out.println("Bus ID: " + (i + 1));
             System.out.println("Bus Name: " + busName[i]);
             System.out.println("Route: " + source[r] + " to " + destination[r]);
             System.out.println("Total Seats: " + totalSeats[i]);
+            System.out.println("----------------------");
         }
     }
 
+
     // 5. Show Seat Map
     static void showSeatMap() {
+
+        if (busCount == 0) {
+            System.out.println("No buses available!");
+            return;
+        }
 
         viewBuses();
 
@@ -149,11 +181,17 @@ public class RouteSeat {
         System.out.println();
     }
 
+
     // 6. Book Ticket
     static void bookTicket() {
 
         if (busCount == 0) {
             System.out.println("No buses available!");
+            return;
+        }
+
+        if (bookingCount == 100) {
+            System.out.println("Booking limit reached!");
             return;
         }
 
@@ -167,14 +205,16 @@ public class RouteSeat {
             return;
         }
 
-        // Display available seats
+        // Show available seats
+        System.out.println("\nAvailable seats:");
+
         for (int i = 0; i < totalSeats[b]; i++) {
             if (seats[b][i] == false) {
                 System.out.print((i + 1) + " ");
             }
         }
 
-        System.out.println("\nAvailable seats");
+        System.out.println();
 
         System.out.print("Enter seat number: ");
         int seat = Integer.parseInt(sc.nextLine());
@@ -204,6 +244,18 @@ public class RouteSeat {
         int r = busRoute[b];
         double amount = distance[r] * 2;
 
+        System.out.println("Ticket fare: Rs. " + amount);
+
+        System.out.print("Enter payment amount: ");
+        double paid = Double.parseDouble(sc.nextLine());
+
+        if (paid < amount) {
+            System.out.println("Insufficient payment!");
+            System.out.println("Booking not completed.");
+            return;
+        }
+
+        // Store booking details
         bookingId[bookingCount] = bookingCount + 1;
         passengerName[bookingCount] = name;
         passengerAge[bookingCount] = age;
@@ -212,16 +264,22 @@ public class RouteSeat {
         fare[bookingCount] = amount;
         active[bookingCount] = true;
 
+        // Mark seat as booked
         seats[b][seat - 1] = true;
 
-        System.out.println("\nTicket booked successfully!");
+        System.out.println("\n--- TICKET CONFIRMATION ---");
         System.out.println("Booking ID: " + bookingId[bookingCount]);
-        System.out.println("Passenger Name: " + name);
+        System.out.println("Passenger: " + name);
+        System.out.println("Age: " + age);
         System.out.println("Seat Number: " + seat);
-        System.out.println("Ticket Fare: Rs. " + amount);
+        System.out.println("Fare: Rs. " + amount);
+        System.out.println("Payment: Rs. " + paid);
+        System.out.println("Change: Rs. " + (paid - amount));
+        System.out.println("Booking successful!");
 
         bookingCount++;
     }
+
 
     // 7. Cancel Booking
     static void cancelBooking() {
@@ -231,7 +289,9 @@ public class RouteSeat {
 
         int index = -1;
 
+        // Find the booking
         for (int i = 0; i < bookingCount; i++) {
+
             if (bookingId[i] == id && active[i] == true) {
                 index = i;
                 break;
@@ -261,7 +321,7 @@ public class RouteSeat {
             refund = 0;
         }
 
-        // Make seat available again
+        // Make the seat available again
         int b = bookedBus[index];
         int s = bookedSeat[index];
 
@@ -269,11 +329,17 @@ public class RouteSeat {
         active[index] = false;
 
         System.out.println("Booking cancelled successfully!");
-        System.out.println("Refund Amount: Rs. " + refund);
+        System.out.println("Refund amount: Rs. " + refund);
     }
+
 
     // 8. Passenger List
     static void passengerList() {
+
+        if (busCount == 0) {
+            System.out.println("No buses available!");
+            return;
+        }
 
         viewBuses();
 
@@ -308,13 +374,13 @@ public class RouteSeat {
         }
     }
 
+
     // Main Method
     public static void main(String[] args) {
 
         int choice;
 
         do {
-
             System.out.println("\n===== ROUTESEAT SYSTEM =====");
             System.out.println("1. Add Route");
             System.out.println("2. Add Bus");
@@ -364,7 +430,7 @@ public class RouteSeat {
                     break;
 
                 case 0:
-                    System.out.println("Thank you!");
+                    System.out.println("Thank you for using RouteSeat!");
                     break;
 
                 default:
