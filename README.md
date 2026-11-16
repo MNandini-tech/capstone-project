@@ -1,236 +1,114 @@
-# CP-041 RouteSeat: Intercity Bus Reservation and Seat Management System
 
-## Team
-- M Nandini
-- Raheela
+class Employee {
 
-Java Track
+    private int empId;
+    private String name;
+    private double basicSalary;
+    private String department;
 
-## How to run
+    // Parameterized constructor
+    Employee(int empId, String name, double basicSalary, String department) {
+        this.empId = empId;
+        this.name = name;
+        this.basicSalary = basicSalary;
+        this.department = department;
+    }
 
-1. Open the RouteSeat project folder in VS Code.
-2. Open the terminal.
-3. Compile the Java program:
+    // Overloaded constructor
+    Employee(int empId, String name) {
+        this.empId = empId;
+        this.name = name;
+        this.basicSalary = 30000;
+        this.department = "General";
+    }
 
-```bash
-javac RouteSeat.java
-```
+    // Getter methods
+    public int getEmpId() {
+        return empId;
+    }
 
-4. Run the program:
+    public String getName() {
+        return name;
+    }
 
-```bash
-java RouteSeat
-```
+    public double getBasicSalary() {
+        return basicSalary;
+    }
 
-## Features that work
+    public String getDepartment() {
+        return department;
+    }
 
-1. **Bus and Route Management:** Set up bus routes and bus details.
-2. **Seat Layout:** Display the bus seat arrangement.
-3. **Seat Availability:** View available and booked seats.
-4. **Seat Booking:** Book seats by entering the passenger's name and age.
-5. **Fare Calculation:** Calculate ticket fare based on travel distance.
-6. **Booking Cancellation:** Cancel an existing seat booking.
-7. **Refund Calculation:** Calculate refunds based on how early the booking is cancelled.
-8. **Passenger List:** Display the list of passengers booked on a bus.
+    // Calculate HRA
+    public double calculateHRA() {
+        return basicSalary * 0.20;
+    }
 
-## Sample run
+    // Calculate DA
+    public double calculateDA() {
+        return basicSalary * 0.50;
+    }
 
-===== ROUTESEAT SYSTEM =====
-1. Add Route
-2. Add Bus
-3. View Routes
-4. View Buses
-5. Show Seat Map
-6. Book Ticket
-7. Cancel Booking
-8. Passenger List
-0. Exit
-Enter your choice: 1
-Enter source: blg
-Enter destination: chi
-Enter distance in KM: 250
-Route added successfully!
+    // Calculate PF
+    public double calculatePF() {
+        return basicSalary * 0.12;
+    }
 
-===== ROUTESEAT SYSTEM =====
-1. Add Route
-2. Add Bus
-3. View Routes
-4. View Buses
-5. Show Seat Map
-6. Book Ticket
-7. Cancel Booking
-8. Passenger List
-0. Exit
-Enter your choice: 2
+    // Gross Salary
+    public double getGrossSalary() {
+        return basicSalary + calculateHRA() + calculateDA();
+    }
 
---- ROUTE LIST ---
-Route ID: 1
-blg to chi
-Distance: 250 KM
-----------------------
-Enter route ID: 1
-Enter bus name: altra dlex
-Enter number of seats (maximum 50): 30
-Bus added successfully!
+    // Calculate Tax
+    public double calculateTax() {
+        return getGrossSalary() * 0.10;
+    }
 
-===== ROUTESEAT SYSTEM =====
-1. Add Route
-2. Add Bus
-3. View Routes
-4. View Buses
-5. Show Seat Map
-6. Book Ticket
-7. Cancel Booking
-8. Passenger List
-0. Exit
-Enter your choice: 3
+    // Net Salary
+    public double getNetSalary() {
+        return getGrossSalary() - calculatePF() - calculateTax();
+    }
 
---- ROUTE LIST ---
-Route ID: 1
-blg to chi
-Distance: 250 KM
-----------------------
+    // toString method
+    public String toString() {
+        return "Employee ID: " + empId +
+               "\nName: " + name +
+               "\nDepartment: " + department +
+               "\nBasic Salary: " + basicSalary +
+               "\nHRA: " + calculateHRA() +
+               "\nDA: " + calculateDA() +
+               "\nGross Salary: " + getGrossSalary() +
+               "\nPF: " + calculatePF() +
+               "\nTax: " + calculateTax() +
+               "\nNet Salary: " + getNetSalary();
+    }
+}
 
-===== ROUTESEAT SYSTEM =====
-1. Add Route
-2. Add Bus
-3. View Routes
-4. View Buses
-5. Show Seat Map
-6. Book Ticket
-7. Cancel Booking
-8. Passenger List
-0. Exit
-Enter your choice: 4
+// Main class
+public class Main {
 
---- BUS LIST ---
-Bus ID: 1
-Bus Name: altra dlex
-Route: blg to chi
-Total Seats: 30
-----------------------
+    public static void main(String[] args) {
 
-===== ROUTESEAT SYSTEM =====
-1. Add Route
-2. Add Bus
-3. View Routes
-4. View Buses
-5. Show Seat Map
-6. Book Ticket
-7. Cancel Booking
-8. Passenger List
-0. Exit
-Enter your choice: 5
+        Employee e1 = new Employee(1, "John", 50000, "Engineering");
 
---- BUS LIST ---
-Bus ID: 1
-Bus Name: altra dlex
-Route: blg to chi
-Total Seats: 30
-----------------------
-Enter bus ID: 1
+        Employee e2 = new Employee(2, "Jane");
 
---- SEAT MAP ---
-A = Available, B = Booked
-1[A]  2[A]  3[A]  4[A]  
-5[A]  6[A]  7[A]  8[A]  
-9[A]  10[A]  11[A]  12[A]  
-13[A]  14[A]  15[A]  16[A]  
-17[A]  18[A]  19[A]  20[A]  
-21[A]  22[A]  23[A]  24[A]  
-25[A]  26[A]  27[A]  28[A]  
-29[A]  30[A]  
+        Employee e3 = new Employee(3, "Sam", 100000, "Management");
 
-===== ROUTESEAT SYSTEM =====
-1. Add Route
-2. Add Bus
-3. View Routes
-4. View Buses
-5. Show Seat Map
-6. Book Ticket
-7. Cancel Booking
-8. Passenger List
-0. Exit
-Enter your choice: 6
+        Employee e4 = new Employee(4, "Zero", 0, "General");
 
---- BUS LIST ---
-Bus ID: 1
-Bus Name: altra dlex
-Route: blg to chi
-Total Seats: 30
-----------------------
-Enter bus ID: 1
+        System.out.println("===== EMPLOYEE PAYROLL SYSTEM =====");
 
-Available seats:
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 
-Enter seat number: 3
-Enter passenger name: pink
-Enter passenger age: 12
-Ticket fare: Rs. 500.0
-Enter payment amount: 500
+        System.out.println("\nEmployee 1");
+        System.out.println(e1);
 
---- TICKET CONFIRMATION ---
-Booking ID: 1
-Passenger: pink
-Age: 12
-Seat Number: 3
-Fare: Rs. 500.0
-Payment: Rs. 500.0
-Change: Rs. 0.0
-Booking successful!
+        System.out.println("\nEmployee 2");
+        System.out.println(e2);
 
-===== ROUTESEAT SYSTEM =====
-1. Add Route
-2. Add Bus
-3. View Routes
-4. View Buses
-5. Show Seat Map
-6. Book Ticket
-7. Cancel Booking
-8. Passenger List
-0. Exit
-Enter your choice: 8
+        System.out.println("\nEmployee 3");
+        System.out.println(e3);
 
---- BUS LIST ---
-Bus ID: 1
-Bus Name: altra dlex
-Route: blg to chi
-Total Seats: 30
-----------------------
-Enter bus ID: 1
-
---- PASSENGER LIST ---
-Booking ID: 1
-Name: pink
-Age: 12
-Seat Number: 3
-----------------------
-
-===== ROUTESEAT SYSTEM =====
-1. Add Route
-2. Add Bus
-3. View Routes
-4. View Buses
-5. Show Seat Map
-6. Book Ticket
-7. Cancel Booking
-8. Passenger List
-0. Exit
-Enter your choice: 7
-Enter booking ID: 1
-Enter hours before departure: 17
-Booking cancelled successfully!
-Refund amount: Rs. 250.0
-
-===== ROUTESEAT SYSTEM =====
-1. Add Route
-2. Add Bus
-3. View Routes
-4. View Buses
-5. Show Seat Map
-6. Book Ticket
-7. Cancel Booking
-8. Passenger List
-0. Exit
-Enter your choice: 0
-Thank you for using RouteSeat!
+        System.out.println("\nEmployee 4");
+        System.out.println(e4);
+    }
+}
